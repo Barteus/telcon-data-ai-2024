@@ -61,7 +61,7 @@ juju deploy spark-history-server-k8s -n1 --channel 3.4/stable
 juju deploy s3-integrator -n1 --channel edge
 juju config s3-integrator bucket="history-server" path="spark-events" endpoint=http://minio.kubeflow:9000/
 # change secret-key based on minio secret above
-juju run s3-integrator/0 sync-s3-credentials access-key=minio secret-key="$(kubectl get secret minio-secret -n kubeflow -oyaml | yq .data.MINIO_SECRET_KEY | base64 -d)"
+juju run s3-integrator/0 sync-s3-credentials access-key=minio secret-key="$(kubectl get secret minio-secret -n kubeflow -oyaml | yq -r .data.MINIO_SECRET_KEY | base64 -d)"
 juju relate s3-integrator spark-history-server-k8s
 
 juju consume admin/cos.traefik cos-traefik
